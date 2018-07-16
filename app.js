@@ -2,11 +2,13 @@
 let speed = 70;
 let size = 15;
 
+// Clases y constructores de objetos
 class object {
      constructor(){
           this.size = size;
      }
 
+	//detecta que el cuerpo de la serpiente no choque consigo mismo
      shock(obj) {
           let difx = Math.abs(this.x - obj.x);
           let dify = Math.abs(this.y - obj.y);
@@ -18,6 +20,7 @@ class object {
      }
 }
 
+// Cuerpo de la serpiente
 class Tale extends object {
      constructor(x,y) {
          super();
@@ -25,6 +28,7 @@ class Tale extends object {
           this.y = y;
           this.next = null;
      }
+	//Con su respectivo método para dibujarlo, contiene las instrucciones para las dimensiones y estilo
      draw (ctx) {
          if(this.next !=null) {
              this.next.draw(ctx);
@@ -50,12 +54,14 @@ class Tale extends object {
          return this.next;
      }
 }
+// clase para el objeto "comida"
 class Food extends object {
     constructor() {
         super();
         this.x = this.generate ();
         this.y = this.generate ();
     }
+	//funcines  para generar el objeto de forma aleatoria y colocarlo en el espacio del canvas
     generate () {
         let num = (Math.floor(Math.random() *59))*10;
         return num;
@@ -64,6 +70,7 @@ class Food extends object {
         this.x = this.generate();
         this.y = this.generate();
     }
+	// método que dibuja la comida
     draw(ctx) {
         ctx.fillStyle ="#e53935";
         ctx.fillRect (this.x, this.y, this.size, this.size);
@@ -82,7 +89,8 @@ function movement (){
     let ny = head.y+ydir;
     head.setxy(nx,ny);
 }
-
+// http://keycode.info/
+// respuestas al evento que involucre la tecla flecha arriba
 function control (event) {
     let code = event.keyCode;
     if (xaxis) {
@@ -92,6 +100,7 @@ function control (event) {
             xaxis = false;
             yaxis = true;
         }
+	    // respuestas al evento que involucre la tecla flecha abajo
         if(code == 40) {
             ydir = size;
             xdir = 0;
@@ -99,6 +108,7 @@ function control (event) {
             yaxis = true;
         }
     }
+	// respuestas al evento que involucre la tecla flecha a la izquierda
     if (yaxis) {
         if(code == 37) {
             ydir = 0;
@@ -106,6 +116,7 @@ function control (event) {
             xaxis = true;
             yaxis = false;
     }
+	    //// respuestas al evento que involucre la tecla flecha a la izquierda
     if(code == 39) {
         ydir = 0;
         xdir = size;
@@ -116,6 +127,7 @@ function control (event) {
 
 }
 
+// funcion para alertar el fin del juego
 function endGame() {
     xdir = 0;
     ydir = 0;
@@ -125,11 +137,14 @@ function endGame() {
     food = new Food ();
     alert("You lose, try again!");
 }
+
+// funcion que detecta el choque con los bordes del canvas
 function crashwall() {
     if (head.x < 0 || head.x > 590 || head.y < 0 || head.y > 590) {
         endGame();
     }
 }
+// funcion que detecta el choque de la serpiente consigo misma
 function bodycrash(){
     let temp = null;
     try{
@@ -145,7 +160,7 @@ function bodycrash(){
         }
     }
 }
-
+// funcion que dibuja nuestro canvas
 function draw () {
     let canvas = document.getElementById("board");
     // para renderizar en dos dimenciones, también hay otros contextos como webgl para 3D pero no esta soportado en todos los navegadores.
@@ -157,6 +172,7 @@ function draw () {
     food.draw(ctx);
 }
 
+// función principal que llama a las demas funciones 
 function main () {
     bodycrash();
     crashwall();
